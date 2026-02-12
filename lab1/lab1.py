@@ -66,7 +66,6 @@ class RetailModel:
         fee *= (self.customs_duty *
                 self.delivery_amount *
                 self.purchase_price)
-        
         if(self.funds + self.loan_available
            < amount + fee):
             return False
@@ -125,20 +124,6 @@ class RetailModel:
                     self.loan -= money_received * self.part_pay_loan
                     self.funds += money_received * (1 - self.part_pay_loan)
                 self.retail_list.pop(i)
-
-
-        while(len(self.retail_list) != 0 and
-              self.retail_list[0] == self.month):
-                money_received = (self.selling_price *
-                                self.delivery_amount)
-                if(self.loan < money_received * self.part_pay_loan):
-                    money_received -= self.loan
-                    self.loan = 0
-                    self.funds += money_received
-                else:
-                    self.loan -= money_received * self.part_pay_loan
-                    self.funds += money_received * (1 - self.part_pay_loan)
-                self.retail_list.pop(0)
 
     def monthElapsed(self):
         self.loan *= self.loan_interest
@@ -314,7 +299,9 @@ for i in range(0, 101, 1):
             model.setRetailTime(3)
             model.setSellingPrice(220)
         model.monthElapsed()
-    file.write(f"{i}; {model.funds - model.loan}; {7000000 - model.loan_available}\n")
+    file.write(f"{i}; "
+               f"{model.funds - model.loan}; "
+               f"{7000000 - model.loan_available}\n")
     if(model.funds - model.loan > best_profit):
         best_profit = model.funds - model.loan
         best_part_pay_loan = i
